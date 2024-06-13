@@ -40,11 +40,11 @@
 #define Q6 (+3.9268447888541310343247866236378900929051188393826E-03)
 
 /*  The constant Pi / 2.                                                      */
-#define TMPL_PI_BY_TWO (+1.5707963267948966192313216916397514420985846996E+00)
+#define PI_BY_TWO (+1.5707963267948966192313216916397514420985846996E+00)
 
 /*  Helper macros for evaluating a polynomial via Horner's method.            */
-#define TMPL_NUM_EVAL(z) P0 + z*(P1 + z*(P2 + z*(P3 + z*(P4 + z*(P5 + z*P6)))))
-#define TMPL_DEN_EVAL(z) Q0 + z*(Q1 + z*(Q2 + z*(Q3 + z*(Q4 + z*(Q5 + z*Q6)))))
+#define NUM_EVAL(z) P0 + z*(P1 + z*(P2 + z*(P3 + z*(P4 + z*(P5 + z*P6)))))
+#define DEN_EVAL(z) Q0 + z*(Q1 + z*(Q2 + z*(Q3 + z*(Q4 + z*(Q5 + z*Q6)))))
 
 /*  Function for computing the (12, 12) Pade approximant of acos(x).          */
 double Arccos_Double_Pade(double x)
@@ -53,11 +53,11 @@ double Arccos_Double_Pade(double x)
     const double x2 = x*x;
 
     /*  Use Horner's method to evaluate the two polynomials.                  */
-    const double p = TMPL_NUM_EVAL(x2);
-    const double q = TMPL_DEN_EVAL(x2);
+    const double p = NUM_EVAL(x2);
+    const double q = DEN_EVAL(x2);
     const double r = x2*p/q;
 
     /*  p/q is the Pade approximant for (acos(x) - pi/2 + x) / x^3.           */
-    return TMPL_PI_BY_TWO - (x + x*r);
+    return PI_BY_TWO - (x + x*r);
 }
 /*  End of Arccos_Double_Pade.                                                */
