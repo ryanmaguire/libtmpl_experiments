@@ -17,7 +17,7 @@
  *  with libtmpl_experiments.  If not, see <https://www.gnu.org/licenses/>.   *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Computes the (4, 4) Pade approximant of asin(x) at double precision.  *
+ *      Computes a Pade approximant for asin(x) at long double precision.     *
  ******************************************************************************/
 #include "arcsin.h"
 

@@ -17,32 +17,34 @@
  *  with libtmpl_experiments.  If not, see <https://www.gnu.org/licenses/>.   *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Computes the (4, 4) Pade approximant of asin(x) at single precision.  *
+ *      Computes a Maclaurin series for asin(x).                              *
  ******************************************************************************/
 #include "arcsin.h"
 
-/*  Coefficients for the numerator of the Pade approximant.                   */
-#define P0 (+1.6666666666666666666666666666666666666666666666667E-01F)
-#define P1 (-1.1262038994597134132017852948085506225041108762039E-01F)
-#define P2 (+4.3770531076732627120224019448825650376037972937198E-03F)
+/*  Only the odd non-constant terms have non-zero coefficients.               */
+#define A00 (1.0000000000000000000000000000000000000000000000000E+00)
+#define A01 (1.6666666666666666666666666666666666666666666666667E-01)
+#define A02 (7.5000000000000000000000000000000000000000000000000E-02)
+#define A03 (4.4642857142857142857142857142857142857142857142857E-02)
+#define A04 (3.0381944444444444444444444444444444444444444444444E-02)
+#define A05 (2.2372159090909090909090909090909090909090909090909E-02)
+#define A06 (1.7352764423076923076923076923076923076923076923077E-02)
+#define A07 (1.3964843750000000000000000000000000000000000000000E-02)
 
-/*  Coefficients for the denominator of the Pade approximant.                 */
-#define Q0 (+1.0000000000000000000000000000000000000000000000000E+00F)
-#define Q1 (-1.1257223396758280479210711768851303735024665257223E+00F)
-#define Q2 (+2.6498022864301934069375929841046120115887557748023E-01F)
+/*  Helper macro for evaluating a polynomial via Horner's method.             */
+#define POLY_EVAL(z) \
+A00 + z*(A01 + z*(A02 + z*(A03 + z*(A04 + z*(A05 + z*(A06 + z*A07))))))
 
-/*  Function for computing the (4, 4) Pade approximant of asin(x).            */
-float Arcsin_Float_Pade(float x)
+/*  Computes the degree 15 Maclaurin polynomial for asin(x).                  */
+double Arcsin_Double_Maclaurin(double x)
 {
-    /*  The polynomials for the numerator and denominator are in terms of x^2.*/
-    const float x2 = x*x;
+    /*  The non-constant terms are odd, powers are x^{2n+1}.                  */
+    const double x2 = x*x;
 
-    /*  Use Horner's method to evaluate the two polynomials.                  */
-    const float p = P0 + x2*(P1 + x2*P2);
-    const float q = Q0 + x2*(Q1 + x2*Q2);
-    const float r = x2*p/q;
+    /*  Compute the Maclaurin series of asin(x) / x.                          */
+    const double poly = POLY_EVAL(x2);
 
-    /*  p/q is the Pade approximant for (asin(x) - x) / x^3.                  */
-    return x*r + x;
+    /*  Scale by the input to complete the computation.                       */
+    return x*poly;
 }
-/*  End of Arcsin_Float_Pade.                                                 */
+/*  End of Arcsin_Double_Maclaurin.                                           */

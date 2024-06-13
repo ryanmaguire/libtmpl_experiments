@@ -17,32 +17,41 @@
  *  with libtmpl_experiments.  If not, see <https://www.gnu.org/licenses/>.   *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Computes the (4, 4) Pade approximant of asin(x) at single precision.  *
+ *      Computes a Remez approximation of asin(x) at double precision.        *
  ******************************************************************************/
 #include "arcsin.h"
 
-/*  Coefficients for the numerator of the Pade approximant.                   */
-#define P0 (+1.6666666666666666666666666666666666666666666666667E-01F)
-#define P1 (-1.1262038994597134132017852948085506225041108762039E-01F)
-#define P2 (+4.3770531076732627120224019448825650376037972937198E-03F)
+/*  Coefficients for the numerator.                                           */
+#define A00 (+1.66666666666666657415E-01)
+#define A01 (-3.25565818622400915405E-01)
+#define A02 (+2.01212532134862925881E-01)
+#define A03 (-4.00555345006794114027E-02)
+#define A04 (+7.91534994289814532176E-04)
+#define A05 (+3.47933107596021167570E-05)
 
-/*  Coefficients for the denominator of the Pade approximant.                 */
-#define Q0 (+1.0000000000000000000000000000000000000000000000000E+00F)
-#define Q1 (-1.1257223396758280479210711768851303735024665257223E+00F)
-#define Q2 (+2.6498022864301934069375929841046120115887557748023E-01F)
+/*  Coefficients for the denominator.                                         */
+#define B00 (+1.00000000000000000000E+00)
+#define B01 (-2.40339491173441421878E+00)
+#define B02 (+2.02094576023350569471E+00)
+#define B03 (-6.88283971605453293030E-01)
+#define B04 (+7.70381505559019352791e-02)
 
-/*  Function for computing the (4, 4) Pade approximant of asin(x).            */
-float Arcsin_Float_Pade(float x)
+/*  Helper macros for evaluating polynomials using Horner's method.           */
+#define NUM_EVAL(z) A00 + z*(A01 + z*(A02 + z*(A03 + z*(A04 + z*A05))))
+#define DEN_EVAL(z) B00 + z*(B01 + z*(B02 + z*(B03 + z*B04)))
+
+/*  Function for computing the (10, 8) minimax approximation for asin(x).     */
+double Arcsin_Double_Rat_Remez(double x)
 {
     /*  The polynomials for the numerator and denominator are in terms of x^2.*/
-    const float x2 = x*x;
+    const double x2 = x*x;
 
     /*  Use Horner's method to evaluate the two polynomials.                  */
-    const float p = P0 + x2*(P1 + x2*P2);
-    const float q = Q0 + x2*(Q1 + x2*Q2);
-    const float r = x2*p/q;
+    const double p = NUM_EVAL(x2);
+    const double q = DEN_EVAL(x2);
+    const double r = x2*p/q;
 
-    /*  p/q is the Pade approximant for (asin(x) - x) / x^3.                  */
+    /*  p/q is the minimax approximant for (asin(x) - x) / x^3.               */
     return x*r + x;
 }
-/*  End of Arcsin_Float_Pade.                                                 */
+/*  End of Arcsin_Double_Rat_Remez.                                           */
