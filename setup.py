@@ -41,6 +41,7 @@ compile_args = [
 ]
 
 arccos_list = []
+arcsin_list = []
 i0_list = []
 erf_list = []
 fresnel_cos_list = []
@@ -48,6 +49,10 @@ fresnel_cos_list = []
 for file in os.listdir("arccos/"):
     if file[-1] == "c":
         arccos_list.append("arccos/" + file)
+
+for file in os.listdir("arcsin/"):
+    if file[-1] == "c":
+        arcsin_list.append("arcsin/" + file)
 
 for file in os.listdir("besseli0/"):
     if file[-1] == "c":
@@ -71,6 +76,13 @@ setuptools.setup(
         setuptools.Extension(
             "arccos",
             arccos_list,
+            include_dirs = [numpy.get_include()],
+            libraries = ["tmpl"],
+            extra_compile_args = compile_args
+        ),
+        setuptools.Extension(
+            "arcsin",
+            arcsin_list,
             include_dirs = [numpy.get_include()],
             libraries = ["tmpl"],
             extra_compile_args = compile_args
