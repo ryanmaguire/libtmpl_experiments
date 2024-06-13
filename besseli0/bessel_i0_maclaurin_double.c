@@ -76,6 +76,6 @@ double I0_Double_Maclaurin(double x)
     const double x2 = x*x;
 
     /*  Use Horner's method to compute and return.                            */
-    return TMPL_POLY_EVAL(x2);
+    return POLY_EVAL(x2);
 }
 /*  End of I0_Double_Maclaurin.                                               */
