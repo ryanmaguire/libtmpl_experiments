@@ -1,0 +1,198 @@
+/******************************************************************************
+ *                                  LICENSE                                   *
+ ******************************************************************************
+ *  This file is part of libtmpl_experiments.                                 *
+ *                                                                            *
+ *  libtmpl_experiments is free software: you can redistribute it and/or      *
+ *  modify it under the terms of the GNU General Public License as published  *
+ *  by the Free Software Foundation, either version 3 of the License, or      *
+ *  (at your option) any later version.                                       *
+ *                                                                            *
+ *  libtmpl_experiments is distributed in the hope that it will be useful,    *
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of            *
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             *
+ *  GNU General Public License for more details.                              *
+ *                                                                            *
+ *  You should have received a copy of the GNU General Public License along   *
+ *  with libtmpl_experiments.  If not, see <https://www.gnu.org/licenses/>.   *
+ ******************************************************************************
+ *                         bessel_i0_chebyshev_double                         *
+ ******************************************************************************
+ *  Purpose:                                                                  *
+ *      Computes the Chebyshev expansion of I0(x) at long double precision.   *
+ ******************************************************************************
+ *                             DEFINED FUNCTIONS                              *
+ ******************************************************************************
+ *  Function Name:                                                            *
+ *      I0_LDouble_Chebyshev                                                  *
+ *  Purpose:                                                                  *
+ *      Computes the Chebyshev expansion of I0(x) for positive x >= 8.        *
+ *  Arguments:                                                                *
+ *      x (double):                                                           *
+ *          A real number.                                                    *
+ *  Output:                                                                   *
+ *      I0_x (double):                                                        *
+ *          The asymptotic expansion of x.                                    *
+ *  Called Functions:                                                         *
+ *      tmpl_math.h:                                                          *
+ *          tmpl_Double_Exp_Pos_Kernel:                                       *
+ *              Computes exp(x) for x > 1.                                    *
+ *          tmpl_Double_Sqrt:                                                 *
+ *              Computes the square root of a real number.                    *
+ *  Method:                                                                   *
+ *      Compute using a Chebyshev approximation on the interval [8, infty].   *
+ *      The function:                                                         *
+ *                                                                            *
+ *               16                                                           *
+ *          y = ---- - 1                                                      *
+ *                x                                                           *
+ *                                                                            *
+ *      Transforms the interval [8, infty] to [-1, 1]. We then compute the    *
+ *      Chebyshev coefficients for the function:                              *
+ *                                                                            *
+ *          f(x) = exp(-x) I0(y) sqrt(x)                                      *
+ *                                                                            *
+ *      We can accurately compute f(x) using a degree 20 Chebyshev expansion: *
+ *                                                                            *
+ *                  20                                                        *
+ *                 -----                                                      *
+ *                 \                                                          *
+ *          f(x) = /     c_n T_n(x)                                           *
+ *                 -----                                                      *
+ *                 n = 0                                                      *
+ *                                                                            *
+ *      where c_n are the coefficients and T_n is the nth Chebyshev           *
+ *      polynomial. We further simplify this into a proper polynomial form    *
+ *      by expanding the Chebyshev polynomials.                               *
+ *                                                                            *
+ *                             --                   --                        *
+ *                  20        |    n                  |                       *
+ *                 -----      |  -----                |                       *
+ *                 \          |  \                    |                       *
+ *          f(x) = /      c_n |  /      t_{k, n} x^k  |                       *
+ *                 -----      |  -----                |                       *
+ *                 n = 0      |  k = 0                |                       *
+ *                             --                   --                        *
+ *                                                                            *
+ *      where t_{k, n} is the kth coefficients of the nth Chebyshev           *
+ *      polynomial. By collecting all of the terms together we get:           *
+ *                                                                            *
+ *                  20                                                        *
+ *                 -----                                                      *
+ *                 \                                                          *
+ *          f(x) = /     a_n x^n                                              *
+ *                 -----                                                      *
+ *                 n = 0                                                      *
+ *                                                                            *
+ *      where the a_n are computed from c_n and t_{k, n} via a Cauchy product.*
+ *      This is evaluated by Horner's method, which is faster than Clenshaw's *
+ *      algorithm for Chebyshev polynomials in their usual form.              *
+ *                                                                            *
+ *      Labelling this final sum as P(x), we can compute I0(x) via:           *
+ *                                                                            *
+ *          I0(x) = exp(x) P(x) / sqrt(x)                                     *
+ *                                                                            *
+ *  Notes:                                                                    *
+ *      Accurate to double precision for x >= 8.                              *
+ *      For x < 8 use the Maclaurin series.                                   *
+ *      For large x (x > 64) this function is accurate to double precision,   *
+ *      but slower than the asymptotic expansion. It is better to use that    *
+ *      function if you know your input is big.                               *
+ ******************************************************************************
+ *                                DEPENDENCIES                                *
+ ******************************************************************************
+ *  1.) tmpl_math.h:                                                          *
+ *          Header file containing exp and sqrt functions.                    *
+ ******************************************************************************
+ *  Author:     Ryan Maguire                                                  *
+ *  Date:       January 10, 2022                                              *
+ ******************************************************************************/
+
+/*  Function prototype found here.                                            */
+#include "bessel_i0.h"
+
+/*  Exp kernel found here, as is the square root function.                    */
+#include <libtmpl/include/tmpl_math.h>
+
+/*  Coefficients for the polynomial.                                          */
+#define A00 (+4.0217650944500812912412062682554015864758708641122E-01L)
+#define A01 (+3.3605519836670235954708677573057674903333246992903E-03L)
+#define A02 (+1.3621607437904054799841758982479293811131516929561E-04L)
+#define A03 (+1.1143033854011811083558679211638434062764248318695E-05L)
+#define A04 (+1.4838480973971800609046361672889019897024382546250E-06L)
+#define A05 (+2.9735845331509646125662538478643653991903153361183E-07L)
+#define A06 (+8.8713600387547075477658297578709122469344322090695E-08L)
+#define A07 (+3.9340297511352998278016448937536069448254634984065E-08L)
+#define A08 (+2.1620199017859248534590406397671142859637435618941E-08L)
+#define A09 (+7.4722687049004145531137867656084079636040012667167E-09L)
+#define A10 (-7.1010934904762743075955916676338088713004980913523E-09L)
+#define A11 (-1.3122900132993169208905971014542520951427694412370E-08L)
+#define A12 (-4.3057274269883615152914097212223008069764561812301E-09L)
+#define A13 (+6.9191599461531431879847335005129655312558821369738E-09L)
+#define A14 (+5.1919580836693996439994143159719873913638489213162E-09L)
+#define A15 (-2.5947610525034173704628552617722105818086735464970E-09L)
+#define A16 (-2.9337366286377845325039494204330159462216768587498E-09L)
+#define A17 (+6.7633829293190930605818684065514625993663001150591E-10L)
+#define A18 (+9.7357766250852428722851597292198387294250385367379E-10L)
+#define A19 (-8.9797050228466493282562812742470450345111126838963E-11L)
+#define A20 (-1.4824893214970785221533004978797389957959905477607E-10L)
+
+/*  Helper macro for evaluating a polynomial using Horner's method.           */
+#define TMPL_POLY_EVAL(z) \
+A00 + z*(\
+  A01 + z*(\
+    A02 + z*(\
+      A03 + z*(\
+        A04 + z*(\
+          A05 + z*(\
+            A06 + z*(\
+              A07 + z*(\
+                A08 + z*(\
+                  A09 + z*(\
+                    A10 + z*(\
+                      A11 + z*(\
+                        A12 + z*(\
+                          A13 + z*(\
+                            A14 + z*(\
+                              A15 + z*(\
+                                A16 + z*(\
+                                  A17 + z*(\
+                                    A18 + z*(\
+                                      A19 + z*A20\
+                                    )\
+                                  )\
+                                )\
+                              )\
+                            )\
+                          )\
+                        )\
+                      )\
+                    )\
+                  )\
+                )\
+              )\
+            )\
+          )\
+        )\
+      )\
+    )\
+  )\
+)
+
+/*  Function for computing I0(x) using a Chebyshev expansion for x >= 8.      */
+long double I0_LDouble_Chebyshev(long double x)
+{
+    /*  y = 16/x - 1 transforms [8, infty] to [-1, 1], the domain of the      *
+     *  Chebyshev polynomials. The polynomial is in terms of y.               */
+    const long double y = 16.0L/x - 1.0L;
+
+    /*  Evaluate the polynomial using Horner's method.                        */
+    const long double poly = TMPL_POLY_EVAL(y);
+
+    /*  The Chebyshev expansion is for exp(-x) I0(x) * sqrt(x). Compute I0(x) *
+     *  by scaling the polynomial by exp(x) / sqrt(x).                        */
+    const long double sqrt_x = tmpl_LDouble_Sqrt(x);
+    const long double exp_x = tmpl_LDouble_Exp_Pos_Kernel(x);
+    return exp_x * poly / sqrt_x;
+}
+/*  End of I0_LDouble_Chebyshev.                                              */
