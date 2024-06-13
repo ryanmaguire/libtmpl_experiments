@@ -19,6 +19,7 @@
  *  Purpose:                                                                  *
  *      Computes a Maclaurin series for acos(x) at single precision.          *
  ******************************************************************************/
+#include "arccos.h"
 
 /*  Location of the TMPL_LDOUBLE_TYPE macro.                                  */
 #include <libtmpl/include/tmpl_config.h>

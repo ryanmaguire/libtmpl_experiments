@@ -39,7 +39,7 @@
 A0 + z*(A1 + z*(A2 + z*(A3 + z*(A4 + z*(A5 + z*(A6 + z*A7))))))
 
 /*  Computes the degree 15 Maclaurin polynomial for acos(x).                  */
-double Arccos_Double_Maclaruin(double x)
+double Arccos_Double_Maclaurin(double x)
 {
     /*  The non-constant terms are odd, powers are x^{2n+1}.                  */
     const double x2 = x*x;
