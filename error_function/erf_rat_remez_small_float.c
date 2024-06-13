@@ -30,13 +30,13 @@
 #define Q01 (+4.3814526297098596654375260669316253166090338311380E-01F)
 #define Q02 (+6.0530507610345444974553903042771357179713831714362E-02F)
 
-#define TMPL_NUM_EVAL(z) P00 + z*(P01 + z*P02)
-#define TMPL_DEN_EVAL(z) Q00 + z*(Q01 + z*Q02)
+#define NUM_EVAL(z) P00 + z*(P01 + z*P02)
+#define DEN_EVAL(z) Q00 + z*(Q01 + z*Q02)
 
 float Erf_Float_Rat_Remez_Small(float x)
 {
     const float x2 = x*x;
-    const float p = TMPL_NUM_EVAL(x2);
-    const float q = TMPL_DEN_EVAL(x2);
+    const float p = NUM_EVAL(x2);
+    const float q = DEN_EVAL(x2);
     return x * p / q;
 }

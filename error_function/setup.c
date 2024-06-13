@@ -19,6 +19,8 @@
 #include "error_function.h"
 #include "../cpython.h"
 
+extern PyMODINIT_FUNC PyInit_erf(void);
+
 static PyObject *abramowitz_and_stegun(PyObject *self, PyObject *args)
 {
     Generic_Function c_funcs;

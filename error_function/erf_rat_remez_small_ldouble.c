@@ -24,8 +24,7 @@
 #include "error_function.h"
 
 /*  64-bit long double does not need any more precision than 64-bit double.   */
-#if TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_LITTLE_ENDIAN || \
-    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_BIG_ENDIAN
+#if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_64_BIT
 
 /*  Coefficients for the numerator of the Remez rational approximation.       */
 #define P00 (+1.1283791670955124938475573609352049610120121044597E+00)
@@ -42,13 +41,11 @@
 #define Q03 (+6.1783570761603794456940715597216373780221488456877E-03)
 #define Q04 (+2.3372686280898360241350381808463274932397135122824E-04)
 
-#define TMPL_NUM_EVAL(z) P00 + z*(P01 + z*(P02 + z*(P03 + z*(P04 + z*P05))))
-#define TMPL_DEN_EVAL(z) Q00 + z*(Q01 + z*(Q02 + z*(Q03 + z*Q04)))
+#define NUM_EVAL(z) P00 + z*(P01 + z*(P02 + z*(P03 + z*(P04 + z*P05))))
+#define DEN_EVAL(z) Q00 + z*(Q01 + z*(Q02 + z*(Q03 + z*Q04)))
 
 /*  double-double, more terms are needed.                                     */
-#elif \
-    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_DOUBLEDOUBLE_BIG_ENDIAN || \
-    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_DOUBLEDOUBLE_LITTLE_ENDIAN
+#elif TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_DOUBLEDOUBLE
 
 /*  Coefficients for the numerator of the Remez rational approximation.       */
 #define P00 (+1.1283791670955125738961589031215432827939072819249E+00L)
@@ -73,16 +70,14 @@
 #define Q07 (+5.8385792517932240596859779924747512184911368640894E-08L)
 #define Q08 (+6.9094999069421294000315396462065516458445628698350E-10L)
 
-#define TMPL_NUM_EVAL(z) \
+#define NUM_EVAL(z) \
 P00+z*(P01+z*(P02+z*(P03+z*(P04+z*(P05+z*(P06+z*(P07+z*(P08+z*P09))))))))
 
-#define TMPL_DEN_EVAL(z) \
+#define DEN_EVAL(z) \
 Q00+z*(Q01+z*(Q02+z*(Q03+z*(Q04+z*(Q05+z*(Q06+z*(Q07+z*Q08)))))))
 
 /*  128-bit quadruple, a few more terms.                                      */
-#elif \
-    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_QUADRUPLE_LITTLE_ENDIAN || \
-    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_QUADRUPLE_BIG_ENDIAN
+#elif TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_128_BIT
 
 /*  Coefficients for the numerator of the Remez rational approximation.       */
 #define P00 (+1.1283791670955125738961589031215451821960287522086E+00L)
@@ -108,10 +103,10 @@ Q00+z*(Q01+z*(Q02+z*(Q03+z*(Q04+z*(Q05+z*(Q06+z*(Q07+z*Q08)))))))
 #define Q08 (+3.4158434955715543503487896252406480016879421400964E-09L)
 #define Q09 (+3.5831638168065023936748103313360044201908867651531E-11L)
 
-#define TMPL_NUM_EVAL(z) \
+#define NUM_EVAL(z) \
 P00+z*(P01+z*(P02+z*(P03+z*(P04+z*(P05+z*(P06+z*(P07+z*(P08+z*P09))))))))
 
-#define TMPL_DEN_EVAL(z) \
+#define DEN_EVAL(z) \
 Q00+z*(Q01+z*(Q02+z*(Q03+z*(Q04+z*(Q05+z*(Q06+z*(Q07+z*(Q08+z*Q09))))))))
 
 #else
@@ -133,15 +128,15 @@ Q00+z*(Q01+z*(Q02+z*(Q03+z*(Q04+z*(Q05+z*(Q06+z*(Q07+z*(Q08+z*Q09))))))))
 #define Q04 (+4.7265546025345986641687578185702585937097522379811E-04L)
 #define Q05 (+1.2432075704897938138859501021741494931597401927988E-05L)
 
-#define TMPL_NUM_EVAL(z) P00+z*(P01+z*(P02+z*(P03+z*(P04+z*(P05+z*P06)))))
-#define TMPL_DEN_EVAL(z) Q00+z*(Q01+z*(Q02+z*(Q03+z*(Q04+z*Q05))))
+#define NUM_EVAL(z) P00+z*(P01+z*(P02+z*(P03+z*(P04+z*(P05+z*P06)))))
+#define DEN_EVAL(z) Q00+z*(Q01+z*(Q02+z*(Q03+z*(Q04+z*Q05))))
 
 #endif
 
 long double Erf_LDouble_Rat_Remez_Small(long double x)
 {
     const long double x2 = x*x;
-    const long double p = TMPL_NUM_EVAL(x2);
-    const long double q = TMPL_DEN_EVAL(x2);
+    const long double p = NUM_EVAL(x2);
+    const long double q = DEN_EVAL(x2);
     return x * p / q;
 }

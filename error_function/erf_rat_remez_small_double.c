@@ -38,8 +38,8 @@
 #define Q04 (+6.9191595185068288930898768882994885221058241870925E-04)
 #define Q05 (+2.0783836614993649468633471293032045438449520367478E-05)
 
-#define TMPL_NUM_EVAL(z) P00 + z*(P01 + z*(P02 + z*(P03 + z*(P04 + z*P05))))
-#define TMPL_DEN_EVAL(z) Q00 + z*(Q01 + z*(Q02 + z*(Q03 + z*(Q04 + z*Q05))))
+#define NUM_EVAL(z) P00 + z*(P01 + z*(P02 + z*(P03 + z*(P04 + z*P05))))
+#define DEN_EVAL(z) Q00 + z*(Q01 + z*(Q02 + z*(Q03 + z*(Q04 + z*Q05))))
 
 #else
 
@@ -58,15 +58,15 @@
 #define Q03 (+6.1783570761603794456940715597216373780221488456877E-03)
 #define Q04 (+2.3372686280898360241350381808463274932397135122824E-04)
 
-#define TMPL_NUM_EVAL(z) P00 + z*(P01 + z*(P02 + z*(P03 + z*(P04 + z*P05))))
-#define TMPL_DEN_EVAL(z) Q00 + z*(Q01 + z*(Q02 + z*(Q03 + z*Q04)))
+#define NUM_EVAL(z) P00 + z*(P01 + z*(P02 + z*(P03 + z*(P04 + z*P05))))
+#define DEN_EVAL(z) Q00 + z*(Q01 + z*(Q02 + z*(Q03 + z*Q04)))
 
 #endif
 
 double Erf_Double_Rat_Remez_Small(double x)
 {
     const double x2 = x*x;
-    const double p = TMPL_NUM_EVAL(x2);
-    const double q = TMPL_DEN_EVAL(x2);
+    const double p = NUM_EVAL(x2);
+    const double q = DEN_EVAL(x2);
     return x * p / q;
 }
