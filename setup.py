@@ -102,7 +102,7 @@ setuptools.setup(
             extra_compile_args = compile_args
         ),
         setuptools.Extension(
-            "fresnel",
+            "fresnel_cos",
             fresnel_cos_list,
             include_dirs = [numpy.get_include()],
             libraries = ["tmpl"],
