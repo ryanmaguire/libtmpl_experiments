@@ -91,6 +91,46 @@ static PyObject *remez_large(PyObject *self, PyObject *args)
     return Get_Func_From_C(self, args, &c_funcs);
 }
 
+static PyObject *heald_three(PyObject *self, PyObject *args)
+{
+    Generic_Function c_funcs;
+    c_funcs.float_func = Fresnel_Cos_Float_Heald_Three;
+    c_funcs.double_func = Fresnel_Cos_Double_Heald_Three;
+    c_funcs.ldouble_func = Fresnel_Cos_LDouble_Heald_Three;
+    c_funcs.func_name = "heald_three";
+    return Get_Func_From_C(self, args, &c_funcs);
+}
+
+static PyObject *heald_four(PyObject *self, PyObject *args)
+{
+    Generic_Function c_funcs;
+    c_funcs.float_func = Fresnel_Cos_Float_Heald_Four;
+    c_funcs.double_func = Fresnel_Cos_Double_Heald_Four;
+    c_funcs.ldouble_func = Fresnel_Cos_LDouble_Heald_Four;
+    c_funcs.func_name = "heald_four";
+    return Get_Func_From_C(self, args, &c_funcs);
+}
+
+static PyObject *heald_six(PyObject *self, PyObject *args)
+{
+    Generic_Function c_funcs;
+    c_funcs.float_func = Fresnel_Cos_Float_Heald_Six;
+    c_funcs.double_func = Fresnel_Cos_Double_Heald_Six;
+    c_funcs.ldouble_func = Fresnel_Cos_LDouble_Heald_Six;
+    c_funcs.func_name = "heald_six";
+    return Get_Func_From_C(self, args, &c_funcs);
+}
+
+static PyObject *heald_eight(PyObject *self, PyObject *args)
+{
+    Generic_Function c_funcs;
+    c_funcs.float_func = Fresnel_Cos_Float_Heald_Eight;
+    c_funcs.double_func = Fresnel_Cos_Double_Heald_Eight;
+    c_funcs.ldouble_func = Fresnel_Cos_LDouble_Heald_Eight;
+    c_funcs.func_name = "heald_eight";
+    return Get_Func_From_C(self, args, &c_funcs);
+}
+
 static PyMethodDef fresnel_cos_methods[] =
 {
     {
@@ -134,6 +174,30 @@ static PyMethodDef fresnel_cos_methods[] =
         remez_large,
         METH_VARARGS,
         "\rComputes C(x) using the auxililary functions.\n\r"
+    },
+    {
+        "heald_three",
+        heald_three,
+        METH_VARARGS,
+        "\rComputes C(x) using the Heald approximation.\n\r"
+    },
+    {
+        "heald_four",
+        heald_four,
+        METH_VARARGS,
+        "\rComputes C(x) using the Heald approximation.\n\r"
+    },
+    {
+        "heald_six",
+        heald_six,
+        METH_VARARGS,
+        "\rComputes C(x) using the Heald approximation.\n\r"
+    },
+    {
+        "heald_eight",
+        heald_eight,
+        METH_VARARGS,
+        "\rComputes C(x) using the Heald approximation.\n\r"
     },
     {NULL, NULL, 0, NULL}
 };
