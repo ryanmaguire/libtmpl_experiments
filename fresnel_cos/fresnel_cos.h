@@ -47,4 +47,20 @@ extern double Fresnel_Cos_Double_Remez_Large(double x);
 extern float Fresnel_Cos_Float_Remez_Large(float x);
 extern long double Fresnel_Cos_LDouble_Remez_Large(long double x);
 
+extern double Fresnel_Cos_Double_Heald_Three(double x);
+extern float Fresnel_Cos_Float_Heald_Three(float x);
+extern long double Fresnel_Cos_LDouble_Heald_Three(long double x);
+
+extern double Fresnel_Cos_Double_Heald_Four(double x);
+extern float Fresnel_Cos_Float_Heald_Four(float x);
+extern long double Fresnel_Cos_LDouble_Heald_Four(long double x);
+
+extern double Fresnel_Cos_Double_Heald_Six(double x);
+extern float Fresnel_Cos_Float_Heald_Six(float x);
+extern long double Fresnel_Cos_LDouble_Heald_Six(long double x);
+
+extern double Fresnel_Cos_Double_Heald_Eight(double x);
+extern float Fresnel_Cos_Float_Heald_Eight(float x);
+extern long double Fresnel_Cos_LDouble_Heald_Eight(long double x);
+
 #endif
