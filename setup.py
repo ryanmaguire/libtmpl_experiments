@@ -45,6 +45,7 @@ arcsin_list = []
 i0_list = []
 erf_list = []
 fresnel_cos_list = []
+fresnel_sin_list = []
 
 for file in os.listdir("arccos/"):
     if file[-1] == "c":
@@ -65,6 +66,10 @@ for file in os.listdir("error_function/"):
 for file in os.listdir("fresnel_cos/"):
     if file[-1] == "c":
         fresnel_cos_list.append("fresnel_cos/" + file)
+
+for file in os.listdir("fresnel_sin/"):
+    if file[-1] == "c":
+        fresnel_sin_list.append("fresnel_sin/" + file)
 
 setuptools.setup(
     name = "tmpl_experiments",
@@ -104,6 +109,13 @@ setuptools.setup(
         setuptools.Extension(
             "fresnel_cos",
             fresnel_cos_list,
+            include_dirs = [numpy.get_include()],
+            libraries = ["tmpl"],
+            extra_compile_args = compile_args
+        ),
+        setuptools.Extension(
+            "fresnel_sin",
+            fresnel_sin_list,
             include_dirs = [numpy.get_include()],
             libraries = ["tmpl"],
             extra_compile_args = compile_args
