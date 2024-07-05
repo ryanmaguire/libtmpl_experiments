@@ -22,4 +22,6 @@ from . import arccos
 from . import arcsin
 from . import besseli0
 from . import erf
+from . import fibonacci
 from . import fresnel_cos
+from . import fresnel_sin

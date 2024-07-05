@@ -44,7 +44,7 @@ directories = [
     "arccos",
     "arcsin",
     "besseli0",
-    "error_function",
+    "erf",
     "fibonacci",
     "fresnel_cos",
     "fresnel_sin"
