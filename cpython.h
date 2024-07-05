@@ -254,5 +254,17 @@ FAILURE:
     return NULL;
 }
 
+/*  Helper macro for creating a Python wrapper for integer C functions.       */
+#define TMPL_EXPERIMENTS_INTEGER_FUNCTION(cname, pyname)                       \
+static PyObject * pyname(PyObject *self, PyObject *args)                       \
+{                                                                              \
+    unsigned int n;                                                            \
+                                                                               \
+    if (!PyArg_ParseTuple(args, "I", &n))                                      \
+        return NULL;                                                           \
+                                                                               \
+    return Py_BuildValue("I", cname(n));                                       \
+}
+
 #endif
 /*  End of include guard.                                                     */
