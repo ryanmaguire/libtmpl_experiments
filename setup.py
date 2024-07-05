@@ -48,7 +48,8 @@ directories = [
     "fibonacci",
     "fresnel_cos",
     "fresnel_sin",
-    "fraunhofer"
+    "fraunhofer",
+    "modulo"
 ]
 
 def get_c_files(directory):
