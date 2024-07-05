@@ -76,12 +76,12 @@ unsigned int fibonacci_power_law(unsigned int n)
     const long double scale_plus = 4.47213595499957939281834733746255247E-01L;
 
     /*  Values for phi_plus and phi_minus raised to the nth power.            */
-    const long double fib_minus = pow(phi_minus, n);
-    const long double fib_plus = pow(phi_plus, n);
+    const long double fib_minus = powl(phi_minus, n);
+    const long double fib_plus = powl(phi_plus, n);
 
     /*  The real-valued fibonacci number. It will have some error in it due   *
      *  to floating point round off. We will need to correct for this.        */
-    const long double fib = round(fib_minus*scale_minus + fib_plus*scale_plus);
+    const long double fib = roundl(fib_minus*scale_minus + fib_plus*scale_plus);
 
     /*  Cast to an integer and return.                                        */
     return (unsigned int)fib;
