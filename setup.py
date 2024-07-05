@@ -40,36 +40,32 @@ compile_args = [
     "-Wold-style-definition"
 ]
 
-arccos_list = []
-arcsin_list = []
-i0_list = []
-erf_list = []
-fresnel_cos_list = []
-fresnel_sin_list = []
+directories = [
+    "arccos",
+    "arcsin",
+    "besseli0",
+    "error_function",
+    "fibonacci",
+    "fresnel_cos",
+    "fresnel_sin"
+]
 
-for file in os.listdir("arccos/"):
-    if file[-1] == "c":
-        arccos_list.append("arccos/" + file)
+def get_c_files(directory):
+    """
+        Returns a list of all C files in a given
+        directory. This can be passed on to the
+        setuptools functions for creating modules.
+    """
+    c_list = []
+    directory_copy = directory
+    if directory_copy[-1] != "/":
+        directory_copy += "/"
 
-for file in os.listdir("arcsin/"):
-    if file[-1] == "c":
-        arcsin_list.append("arcsin/" + file)
+    for file in os.listdir(directory_copy):
+        if file[-1] == "c":
+            c_list.append(directory_copy + file)
 
-for file in os.listdir("besseli0/"):
-    if file[-1] == "c":
-        i0_list.append("besseli0/" + file)
-
-for file in os.listdir("error_function/"):
-    if file[-1] == "c":
-        erf_list.append("error_function/" + file)
-
-for file in os.listdir("fresnel_cos/"):
-    if file[-1] == "c":
-        fresnel_cos_list.append("fresnel_cos/" + file)
-
-for file in os.listdir("fresnel_sin/"):
-    if file[-1] == "c":
-        fresnel_sin_list.append("fresnel_sin/" + file)
+    return c_list
 
 setuptools.setup(
     name = "tmpl_experiments",
@@ -79,46 +75,11 @@ setuptools.setup(
     ext_package = "tmpl_experiments",
     ext_modules = [
         setuptools.Extension(
-            "arccos",
-            arccos_list,
+            directory,
+            get_c_files(directory),
             include_dirs = [numpy.get_include()],
             libraries = ["tmpl"],
             extra_compile_args = compile_args
-        ),
-        setuptools.Extension(
-            "arcsin",
-            arcsin_list,
-            include_dirs = [numpy.get_include()],
-            libraries = ["tmpl"],
-            extra_compile_args = compile_args
-        ),
-        setuptools.Extension(
-            "erf",
-            erf_list,
-            include_dirs = [numpy.get_include()],
-            libraries = ["tmpl"],
-            extra_compile_args = compile_args
-        ),
-        setuptools.Extension(
-            "besseli0",
-            i0_list,
-            include_dirs = [numpy.get_include()],
-            libraries = ["tmpl"],
-            extra_compile_args = compile_args
-        ),
-        setuptools.Extension(
-            "fresnel_cos",
-            fresnel_cos_list,
-            include_dirs = [numpy.get_include()],
-            libraries = ["tmpl"],
-            extra_compile_args = compile_args
-        ),
-        setuptools.Extension(
-            "fresnel_sin",
-            fresnel_sin_list,
-            include_dirs = [numpy.get_include()],
-            libraries = ["tmpl"],
-            extra_compile_args = compile_args
-        )
+        ) for directory in directories
     ]
 )
