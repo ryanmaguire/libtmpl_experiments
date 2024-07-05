@@ -36,33 +36,33 @@ TMPL_EXPERIMENTS_INTEGER_FUNCTION(fibonacci_table, table)
 /*  All functions available in the Python module.                             */
 static PyMethodDef FibonacciMethods[] = {
     {
-        "fibonacci_iterative",
+        "iterative",
         iterative,
         METH_VARARGS,
         "Computes the nth Fibonacci number using an iterative sum."
     },
     {
-        "fibonacci_power_law",
+        "power_law",
         power_law,
         METH_VARARGS,
         "Computes the nth Fibonacci number using the power-law solution to"
         "the difference equation and some tools from libm."
     },
     {
-        "fibonacci_power_law_naive",
+        "power_law_naive",
         power_law_naive,
         METH_VARARGS,
         "Computes the nth Fibonacci number using the power-law solution to"
         "the difference equation. Powers are naively computed."
     },
     {
-        "fibonacci_recursive",
+        "recursive",
         recursive,
         METH_VARARGS,
         "Computes the nth Fibonacci number using the recursive definition."
     },
     {
-        "fibonacci_table",
+        "table",
         table,
         METH_VARARGS,
         "Computes the nth Fibonacci number using a precomputed table."
