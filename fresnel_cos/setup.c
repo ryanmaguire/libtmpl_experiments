@@ -131,6 +131,16 @@ static PyObject *heald_eight(PyObject *self, PyObject *args)
     return Get_Func_From_C(self, args, &c_funcs);
 }
 
+static PyObject *rat_remez(PyObject *self, PyObject *args)
+{
+    Generic_Function c_funcs;
+    c_funcs.float_func = Fresnel_Cos_Float_Rat_Remez;
+    c_funcs.double_func = Fresnel_Cos_Double_Rat_Remez;
+    c_funcs.ldouble_func = Fresnel_Cos_LDouble_Rat_Remez;
+    c_funcs.func_name = "rat_remez";
+    return Get_Func_From_C(self, args, &c_funcs);
+}
+
 static PyMethodDef fresnel_cos_methods[] =
 {
     {
@@ -198,6 +208,12 @@ static PyMethodDef fresnel_cos_methods[] =
         heald_eight,
         METH_VARARGS,
         "\rComputes C(x) using the Heald approximation.\n\r"
+    },
+    {
+        "rat_remez",
+        rat_remez,
+        METH_VARARGS,
+        "\rComputes C(x) using a rational Remez approximation.\n\r"
     },
     {NULL, NULL, 0, NULL}
 };

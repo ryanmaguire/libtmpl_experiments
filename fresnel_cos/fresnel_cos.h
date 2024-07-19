@@ -63,4 +63,8 @@ extern double Fresnel_Cos_Double_Heald_Eight(double x);
 extern float Fresnel_Cos_Float_Heald_Eight(float x);
 extern long double Fresnel_Cos_LDouble_Heald_Eight(long double x);
 
+extern double Fresnel_Cos_Double_Rat_Remez(double x);
+extern float Fresnel_Cos_Float_Rat_Remez(float x);
+extern long double Fresnel_Cos_LDouble_Rat_Remez(long double x);
+
 #endif
